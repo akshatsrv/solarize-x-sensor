@@ -1,0 +1,8 @@
+{
+  "name": "smart-self-check-console",
+  "version": "0.4.2",
+  "description": "Windows management console for Smart Self Check kiosks",
+  "main": "main.cjs",
+  "private": true,
+  "author": "SolarizeX"
+}

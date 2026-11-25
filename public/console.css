@@ -1,0 +1,165 @@
+html:has(.dashboard) { background: #f3f5f8; }
+.dashboard {
+  --primary: #185ba3;
+  --muted: #536378;
+  --line: #d6dee9;
+  --panel: #ffffff;
+  --chrome: #f1f4f8;
+  display: grid;
+  grid-template: minmax(0, 1fr) 31px / 222px minmax(0, 1fr);
+  height: 100vh;
+  min-height: 0;
+  color: #192438;
+  background: var(--chrome);
+  font: 14px/1.45 "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+}
+.dashboard .sidebar {
+  position: static;
+  height: auto;
+  gap: 0;
+  padding: 0;
+  overflow: auto;
+  background: #eaf0f7;
+  color: #27354a;
+  border-right: 1px solid #cdd7e4;
+}
+.dashboard .brand {
+  min-height: 72px;
+  padding: 13px 14px;
+  border-bottom: 1px solid #d6deeb;
+  font-size: .96rem;
+}
+.dashboard .brand small { color: #586a83; font-size: .75rem; }
+.dashboard button.sidebar-toggle {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  padding: 0;
+  color: #223b59;
+  background: transparent;
+  border-color: #bdcce0;
+}
+.dashboard button.sidebar-toggle:hover { background: #dfe8f4; }
+.sidebar-toggle span {
+  width: 14px;
+  height: 2px;
+  border-radius: 1px;
+  background: currentColor;
+  box-shadow: 0 -5px currentColor, 0 5px currentColor;
+}
+.dashboard.sidebar-collapsed { grid-template-columns: 48px minmax(0, 1fr); }
+.dashboard.sidebar-collapsed .brand { justify-content: center; padding-inline: 0; }
+.dashboard.sidebar-collapsed .sidebar-title { display: none; }
+.dashboard .sidebar nav { display: grid; gap: 2px; padding: 9px 7px; }
+.dashboard .sidebar hr { width: 100%; border: 0; border-top: 1px solid #d1dae8; margin: 6px 0; }
+.dashboard .sidebar a {
+  display: block;
+  padding: 7px 9px 7px 13px;
+  border: 1px solid transparent;
+  border-left: 3px solid transparent;
+  border-radius: 3px;
+  background: transparent;
+  color: #24354c;
+  font-size: .92rem;
+}
+.dashboard .sidebar a:hover { background: #dfe8f4; }
+.dashboard .sidebar a[aria-current=page] {
+  color: #123e70;
+  background: #d9e7fa;
+  border-color: #c3d6ef;
+  border-left-color: #246bc0;
+  font-weight: 650;
+}
+.dashboard .workspace {
+  min-width: 0;
+  max-width: none;
+  margin: 0;
+  padding: 0 16px 24px;
+  overflow: auto;
+  background: #f9fafc;
+}
+.dashboard .page-head {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  min-height: 72px;
+  margin: 0 -16px 15px;
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--line);
+  background: #fff;
+}
+.dashboard .page-head h1 { font-size: 1.48rem; font-weight: 650; letter-spacing: 0; }
+.dashboard .page-head p { margin-top: 2px; font-size: .82rem; }
+.dashboard .actions { gap: 5px; }
+.dashboard :is(button, .button) {
+  border-radius: 4px;
+  padding: 5px 10px;
+  min-height: 29px;
+  font-size: .86rem;
+  font-weight: 600;
+}
+.dashboard button.compact { min-height: 25px; padding: 3px 7px; font-size: .78rem; }
+.dashboard :is(button.secondary, .secondary-link) { border-color: #becbdd; color: #223b59; }
+.dashboard :is(button, a, input, select, textarea):focus-visible { outline: 2px solid #245a9a; outline-offset: 2px; }
+.dashboard :is(.surface, .summary > div, .media-library article) { border-radius: 5px; }
+.dashboard .summary { gap: 7px; margin-bottom: 13px; }
+.dashboard .summary > div { padding: 7px 10px; }
+.dashboard .summary span { font-size: .78rem; }
+.dashboard .summary strong { font-size: 1.3rem; margin-top: 0; }
+.dashboard .surface-head { padding: 8px 10px; min-height: 41px; background: #f1f5fa; }
+.dashboard .surface-head :is(h2, h3) { font-size: .89rem; font-weight: 650; }
+.dashboard table { background: var(--panel); }
+.dashboard thead { background: #e9eef6; color: #34435a; }
+.dashboard tbody tr:nth-child(even) { background: #f6f8fb; }
+.dashboard tbody tr:hover { background: #edf4fc; }
+.dashboard th, .dashboard td { padding: 7px 9px; }
+.dashboard .detail { font-size: .78rem; margin-top: 1px; }
+.dashboard .device-controls { min-width: 165px; }
+.dashboard .device-controls button { margin: 0 3px 3px 0; }
+.dashboard .server-panel { padding: 10px; }
+.dashboard .server-panel h2 { font-size: .98rem; }
+.dashboard .server-info dd { font-size: .83rem; }
+.dashboard .calendar-toolbar { padding: 8px 10px; border-bottom: 1px solid #d9e1ec; }
+.dashboard .calendar-toolbar h3 { font-size: 1rem; }
+.dashboard .weekdays, .dashboard .dialog-head, .dashboard .dialog-foot { background: #e9eef6; }
+.dashboard .calendar-cell { min-height: 5rem; }
+.dashboard .calendar-cell.today { box-shadow: inset 0 0 0 2px #6a9bd8; }
+.dashboard .calendar-event[data-target=fleet] { border-color: #2c75b7; background: #e1ecfa; color: #224571; }
+.dashboard .section-tabs a[aria-current=page] { background: #d9e7fa; color: #123e70; }
+.dashboard dialog { border-color: #c6d0e0; border-radius: 6px; }
+.dashboard dialog::backdrop { background: #16264070; }
+.dashboard input:not([type=checkbox]), .dashboard select, .dashboard textarea { border-color: #bac8dc; }
+.console-status {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 0 11px;
+  border-top: 1px solid #cbd6e5;
+  background: #eaf0f7;
+  color: #485a74;
+  font-size: .75rem;
+}
+.console-status #connection { color: inherit; margin: 0; font-size: inherit; }
+.console-status #connection::before { width: .53rem; height: .53rem; background: #c07824; }
+.console-status #connection[data-online=true]::before { background: #26874e; }
+.console-status #status-server:not(:empty) { border-left: 1px solid #beccdf; padding-left: 14px; }
+
+@media (max-width: 800px) {
+  .dashboard { display: block; height: auto; min-height: 100vh; }
+  .dashboard .sidebar { border-right: 0; border-bottom: 1px solid #cdd7e4; }
+  .dashboard .brand { min-height: 45px; border-bottom: 0; padding-block: 6px; }
+  .dashboard.sidebar-collapsed .brand { justify-content: flex-start; padding-inline: 14px; }
+  .dashboard.sidebar-collapsed .sidebar-title { display: block; }
+  .dashboard .sidebar nav { display: flex; flex-wrap: wrap; padding-top: 0; }
+  .dashboard .sidebar hr { display: none; }
+  .dashboard .sidebar a { padding: 4px 6px; }
+  .dashboard .workspace { overflow: visible; }
+  .dashboard .page-head { position: static; }
+  .console-status { min-height: 30px; }
+}
+.dashboard #my-account { margin-left: auto; }
+.dashboard .system-card li { flex-wrap: wrap; }
+#password-form #account-identity { margin-bottom: .75rem; }

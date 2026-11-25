@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Connect to server</title>
+  <link rel="stylesheet" href="./connect.css">
+  <script src="./connect.js" defer></script>
+</head>
+<body>
+  <main>
+    <header><img src="./console.png" alt=""><div><h1 id="connection-title">Connect to server</h1><p>Smart Self Check Console</p></div></header>
+    <form id="connection-form">
+      <label for="address">Server address</label>
+      <input id="address" name="address" type="url" spellcheck="false" required placeholder="https://signage.example.com">
+      <label for="identity">Username</label>
+      <input id="identity" name="username" required maxlength="64" autocomplete="username" value="admin">
+      <div id="invite-field" hidden><label for="invite-code">Invitation code</label><input id="invite-code" maxlength="128" autocomplete="off" disabled></div>
+      <label id="secret-label" for="secret">Password</label>
+      <input id="secret" name="password" type="password" required maxlength="1024" autocomplete="off">
+      <div id="confirm-field" hidden><label for="secret-confirm">Confirm password</label><input id="secret-confirm" type="password" autocomplete="new-password" disabled></div>
+      <p id="message" role="status" aria-live="polite"></p>
+      <div class="actions"><button id="toggle-register" class="link-button" type="button">Activate invitation</button><button id="connect" type="submit">Connect</button></div>
+    </form>
+  </main>
+</body>
+</html>

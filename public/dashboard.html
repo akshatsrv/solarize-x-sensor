@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Smart Self Check Console</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/console.css">
+  <script type="module" src="/dashboard.js"></script>
+</head>
+<body class="dashboard">
+  <aside class="sidebar">
+    <div class="brand">
+      <button id="sidebar-toggle" class="sidebar-toggle" type="button" aria-label="Collapse navigation" aria-expanded="true" aria-controls="console-navigation"><span aria-hidden="true"></span></button>
+      <div class="sidebar-title">Smart Self Check<small>Signage console</small></div>
+    </div>
+    <nav id="console-navigation" aria-label="Console">
+      <a href="#servers">Servers</a>
+      <a href="#fleet">Destinations</a>
+      <a href="#setup">Setup</a>
+      <hr>
+      <a href="#library">Content library</a>
+      <a href="#designer">Designer</a>
+      <a href="#scheduler">Scheduler</a>
+      <a href="#playback">Playback history</a>
+      <hr>
+      <a href="#system">System management</a>
+    </nav>
+  </aside>
+  <main class="workspace">
+    <section id="servers" data-page hidden>
+      <header class="page-head"><div><h1>Servers</h1><p>Monitor management servers and open their kiosk inventories.</p></div><a class="button secondary-link" href="#fleet">View destinations</a></header>
+      <div class="surface server-panel">
+      <div><h2>Management server</h2><p id="server-identity"></p></div>
+      <dl class="server-info">
+        <div><dt>Status</dt><dd id="server-health">Connecting</dd></div>
+        <div><dt>Connected kiosks</dt><dd><a id="server-kiosks" href="#fleet">—</a></dd></div>
+        <div><dt>Version</dt><dd id="server-version">—</dd></div>
+        <div><dt>Started</dt><dd id="server-uptime">—</dd></div>
+      </dl>
+      <ul id="peer-servers" class="peer-servers" hidden></ul>
+      </div>
+    </section>
+    <section id="fleet" data-page>
+      <header class="page-head">
+        <div><h1>Destinations</h1><p id="fleet-state">Connecting to the server…</p></div>
+        <div class="actions">
+          <button type="button" class="secondary" id="enroll" disabled>Enroll kiosk</button>
+          <button type="button" class="secondary" id="defaults" disabled>Fleet defaults</button>
+          <button type="button" class="secondary" id="stop" disabled>Stop all</button>
+          <button type="button" id="start" disabled>Start all</button>
+        </div>
+      </header>
+      <div class="summary" aria-label="Fleet overview">
+        <div><span>Registered</span><strong id="registered">—</strong></div>
+        <div><span>Online</span><strong id="online">—</strong></div>
+        <div><span>Displaying</span><strong id="playing">—</strong></div>
+        <div><span>Needs attention</span><strong id="attention">—</strong></div>
+      </div>
+      <div class="surface">
+        <div class="surface-head device-head"><h2>Devices</h2><div class="filters"><label>Search <input type="search" id="device-search" placeholder="Name, kiosk ID, or site"></label><label>Status <select id="device-filter"><option value="all">All</option><option value="online">Online</option><option value="offline">Offline</option></select></label></div></div>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th scope="col">Kiosk</th><th scope="col">Display</th><th scope="col">Network &amp; system</th><th scope="col">Proximity</th><th scope="col">Controls</th></tr></thead>
+            <tbody id="kiosks"></tbody>
+          </table>
+        </div>
+        <p class="empty" id="empty" hidden>There are no registered kiosks. Start a kiosk agent to connect its device.</p>
+      </div>
+      <p id="message" class="message" role="status"></p>
+      <details id="event-log" class="event-log" hidden><summary>Recent changes</summary><ol id="operations-history"></ol></details>
+    </section>
+
+    <section id="designer" data-page hidden>
+      <header class="page-head"><div><h1>Designer</h1><p>Build a reusable presentation and preview each slide before publishing it.</p></div><div class="actions"><button id="use-template" class="secondary" type="button" disabled>Use demo template</button><button id="new-presentation" type="button" disabled>New presentation</button></div></header>
+      <div class="designer-grid">
+        <div class="surface design-list"><h2>Presentations</h2><div id="presentation-list"></div></div>
+        <form id="designer-form" class="surface design-editor" hidden>
+          <label>Presentation name<input id="presentation-name" maxlength="90" required></label>
+          <div class="design-steps"><div id="slide-list" aria-label="Slides"></div><button id="add-slide" class="secondary compact" type="button">Add slide</button></div>
+          <div class="design-preview" id="design-preview" aria-label="Slide preview"></div>
+          <label>Headline<input id="slide-headline" maxlength="100"></label>
+          <label>Message<textarea id="slide-message" maxlength="350" rows="3"></textarea></label>
+          <div class="form-grid"><label>Image or video<select id="slide-asset"></select></label><label>Theme<select id="slide-theme"><option value="midnight">Midnight</option><option value="green">Green</option><option value="amber">Amber</option></select></label><label>Duration (seconds)<input id="slide-seconds" type="number" min="2" max="120" required></label></div>
+          <div class="actions design-actions"><button id="slide-up" type="button" class="secondary compact">Move left</button><button id="slide-down" type="button" class="secondary compact">Move right</button><button id="remove-slide" type="button" class="secondary compact">Remove slide</button></div>
+          <p id="designer-message" class="message" role="status"></p>
+          <div class="actions design-actions"><button id="schedule-presentation" type="button" class="secondary" disabled>Schedule presentation</button><button id="save-presentation" type="submit">Save presentation</button></div>
+        </form>
+      </div>
+    </section>
+    <section id="scheduler" data-page hidden>
+      <header class="page-head"><div><h1>Scheduler</h1><p>Schedule content for individual kiosks, sites, or the fleet.</p></div><button type="button" id="new-schedule" disabled>New schedule</button></header>
+      <div class="surface calendar">
+        <div class="calendar-toolbar">
+          <div class="actions"><button type="button" id="month-prev" class="secondary compact" aria-label="Previous month">‹</button><button type="button" id="month-today" class="secondary compact">Today</button><button type="button" id="month-next" class="secondary compact" aria-label="Next month">›</button></div>
+          <h3 id="calendar-month"></h3>
+          <label>Show <select id="calendar-target" aria-label="Filter calendar by kiosk or site"><option value="all">All schedules</option></select></label>
+        </div>
+        <div class="calendar-scroll"><div class="weekdays" aria-hidden="true"><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span></div><div id="calendar-days" class="calendar-grid"></div></div>
+      </div>
+      <p id="schedule-message" class="message" role="status"></p>
+      <div class="schedule-list surface"><div class="surface-head"><h3>Saved schedules</h3></div><ul id="saved-schedules"></ul></div>
+    </section>
+
+    <section id="library" data-page hidden>
+      <header class="page-head">
+        <div><h1>Content library</h1><p>Create text or upload media, then publish it to a destination or schedule.</p></div>
+        <div class="actions filters">
+          <label>Category <select id="media-category"><option value="">All categories</option></select></label>
+          <button type="button" id="new-text" class="secondary" disabled>New text</button>
+          <label class="button upload">Upload media<input type="file" id="upload" accept=".mp4,.webm,.jpg,.jpeg,.png,.webp" multiple disabled></label>
+        </div>
+      </header>
+      <p id="upload-status" class="message" role="status"></p>
+      <p class="empty" id="no-media" hidden>No content for this selection.</p>
+      <div id="media-library" class="media-library"></div>
+    </section>
+    <section id="system" data-page hidden>
+      <header class="page-head"><div><h1>System management</h1><p>Manage console access, kiosk license seats, and display defaults.</p></div></header>
+      <nav class="section-tabs" aria-label="System management"><a href="#permissions">Permissions</a><a href="#licenses">Licenses</a><a href="#television">Television settings</a></nav>
+      <div class="system-grid">
+        <article class="surface system-card" data-system="permissions">
+          <h2>Permissions</h2>
+          <p>Superusers manage users and kiosk access. Viewers monitor the fleet, publishers manage content and schedules, and operators control playback.</p>
+          <form id="account-form" class="account-form">
+            <label>User name<input id="account-id" required maxlength="64" pattern="[A-Za-z0-9_\-]+"></label>
+            <label>Role<select id="account-role"><option value="viewer">Viewer</option><option value="publisher">Publisher</option><option value="operator">Operator</option><option value="admin">Superuser</option></select></label>
+            <button type="submit">Create invitation</button>
+          </form>
+          <label id="account-secret" hidden>One-time invitation code<input id="account-password" readonly autocomplete="off"></label>
+          <p id="account-message" class="message" role="status"></p>
+          <ul id="account-list"></ul>
+        </article>
+        <article class="surface system-card" data-system="licenses" hidden><h2>Licenses</h2><p id="license-summary"></p><p>Each enrolled destination uses one seat. Use Access beside a kiosk to issue or revoke its credential.</p><a href="#fleet">Manage destination access</a></article>
+        <article class="surface system-card" data-system="television" hidden><h2>Television settings</h2><p>Choose a display output and set media fit and rotation for a destination.</p><button id="television-defaults" type="button" class="secondary">Edit fleet display defaults</button></article>
+      </div>
+    </section>
+    <section id="playback" data-page hidden>
+      <header class="page-head"><div><h1>Playback history</h1><p>See plays, playback errors, and proximity-triggered check-ins reported by kiosks.</p></div><button id="export-playback" type="button" class="secondary" disabled>Export CSV</button></header>
+      <div class="surface"><div class="surface-head filters"><label>Kiosk <select id="proof-kiosk"><option value="">All kiosks</option></select></label></div><div class="table-scroll"><table><thead><tr><th scope="col">Time</th><th scope="col">Kiosk</th><th scope="col">Content or event</th><th scope="col">Result</th><th scope="col">Schedule</th></tr></thead><tbody id="proof-rows"></tbody></table></div><p id="proof-empty" class="empty">Waiting for playback records.</p></div>
+    </section>
+    <section id="setup" data-page hidden>
+      <header class="page-head"><div><h1>Setup</h1><p>Check the server and connect a kiosk before the demonstration.</p></div><button id="check-deployment" class="secondary" type="button">Run server checks</button></header>
+      <div class="setup-grid">
+        <article class="surface system-card"><h2>Server readiness</h2><dl id="deployment-checks" class="deployment-checks"></dl><p id="deployment-status" class="message" role="status">Waiting for server checks.</p></article>
+        <article class="surface system-card"><h2>Connect a Windows kiosk</h2><ol><li>Enroll the device under <a href="#fleet">Destinations</a> and copy the generated kiosk.env to the device.</li><li>Run the preflight from the project folder on the kiosk.<pre><code>node --env-file=kiosk.env scripts/doctor.mjs</code></pre></li><li>Start the kiosk agent and check its connection under Destinations.</li></ol><p>For production, kiosks connect to the server over outbound HTTPS. The kiosk display and sensor listener use local loopback.</p></article>
+        <article class="surface system-card"><h2>POC walkthrough</h2><ol><li><a href="#designer">Preview a presentation</a> using the demo template.</li><li><a href="#scheduler">Schedule the presentation</a> for a test kiosk.</li><li>Start the display and simulate an arrival and departure under <a href="#fleet">Destinations</a>.</li><li>Confirm plays and the check-in trigger in <a href="#playback">Playback history</a>.</li></ol></article>
+      </div>
+    </section>
+  </main>
+  <footer class="console-status"><span id="connection" role="status">Connecting</span><span id="status-server"></span><button id="my-account" class="secondary compact" type="button" hidden>My account</button></footer>
+
+  <dialog id="password-dialog" aria-labelledby="password-title">
+    <form id="password-form">
+      <header class="dialog-head"><h2 id="password-title">My account</h2><button id="close-password" type="button" class="secondary">Close</button></header>
+      <div class="dialog-body">
+        <p id="account-identity"></p>
+        <p id="bootstrap-account" hidden>The bootstrap administrator password is managed in the server configuration.</p>
+        <fieldset id="password-fields">
+          <label>Current password<input id="current-password" type="password" autocomplete="current-password" required></label>
+          <label>New password<input id="new-password" type="password" minlength="12" maxlength="128" autocomplete="new-password" required></label>
+          <label>Confirm new password<input id="confirm-password" type="password" autocomplete="new-password" required></label>
+        </fieldset>
+        <p id="password-message" class="message" role="status"></p>
+      </div>
+      <footer id="password-actions" class="dialog-foot"><button id="change-password" type="submit">Change password</button></footer>
+    </form>
+  </dialog>
+
+  <dialog id="settings">
+    <form id="settings-form">
+      <header class="dialog-head"><h2 id="settings-title">Kiosk settings</h2><button type="button" id="close-settings" class="secondary">Close</button></header>
+      <div class="dialog-body">
+        <label id="label-field">Kiosk name<input id="label" maxlength="64"></label>
+        <label id="site-field">Site or group<input id="site" maxlength="64" placeholder="For example, Office Building"></label>
+        <label class="checkbox" id="inherit-field"><input type="checkbox" id="inherit"> Use fleet defaults</label>
+        <fieldset id="custom-settings">
+          <label>Check-in website<input type="url" id="url" placeholder="https://solarizedigitech.com/"><small>Leave empty to run the local check-in demo.</small></label>
+          <div class="form-grid">
+            <label>Image duration (s)<input type="number" id="imageSeconds" min="1" max="300" required></label>
+            <label>Absence timeout (s)<input type="number" id="absenceSeconds" min="1" max="3600" required></label>
+            <label>Active session timeout (s)<input type="number" id="abandonSeconds" min="1" max="86400" required></label>
+          </div>
+          <label class="checkbox"><input type="checkbox" id="muted"> Play videos muted</label>
+          <fieldset class="television-fields"><legend>Television settings</legend><div class="form-grid">
+            <label>Display output<input id="tv-monitor" type="number" min="1" max="8" required><small>Use 1 for the primary screen.</small></label>
+            <label>Media fit<select id="tv-fit"><option value="contain">Show entire image</option><option value="cover">Fill the screen</option></select></label>
+            <label>Media rotation<select id="tv-rotation"><option value="0">0°</option><option value="90">90°</option><option value="180">180°</option><option value="270">270°</option></select></label>
+          </div></fieldset>
+          <h3>Playback order</h3>
+          <ol id="editor-playlist" class="editor-playlist"></ol>
+          <div class="add-media">
+            <label>Media from library<select id="media-select"></select></label>
+            <button type="button" id="add-media" class="secondary">Add to playlist</button>
+          </div>
+        </fieldset>
+        <p id="settings-message" class="message" role="status"></p>
+      </div>
+      <footer class="dialog-foot"><button type="submit" id="save-settings">Save and publish</button></footer>
+    </form>
+  </dialog>
+
+  <dialog id="access-dialog" aria-labelledby="access-title">
+    <form id="access-form">
+      <header class="dialog-head"><h2 id="access-title">Enroll kiosk</h2><button type="button" id="close-access" class="secondary">Close</button></header>
+      <div class="dialog-body">
+        <div id="enroll-fields">
+          <label>Kiosk ID<input id="enroll-id" maxlength="64" pattern="[A-Za-z0-9_\-]+" required></label>
+          <label>Kiosk name<input id="enroll-name" maxlength="64" required></label>
+          <label>Site or group<input id="enroll-site" maxlength="64"></label>
+        </div>
+        <p id="access-info"></p>
+        <label id="credential-field" hidden>Kiosk environment file<textarea id="credential-config" cols="52" rows="6" readonly spellcheck="false"></textarea><small>Copy this into kiosk.env on the kiosk. The credential is shown once.</small></label>
+        <p id="access-message" class="message" role="status"></p>
+      </div>
+      <footer class="dialog-foot"><button type="button" id="revoke-access" class="secondary" hidden>Revoke credential</button><button type="submit" id="issue-access">Enroll and issue credential</button></footer>
+    </form>
+  </dialog>
+
+  <dialog id="schedule-dialog" aria-labelledby="schedule-title">
+    <form id="schedule-form">
+      <header class="dialog-head"><h2 id="schedule-title">New schedule</h2><button type="button" id="close-schedule" class="secondary">Close</button></header>
+      <div class="dialog-body">
+        <div class="form-grid"><label>Schedule name<input id="schedule-name" required maxlength="64"></label><label>Play on<select id="schedule-target" required></select></label></div>
+        <div class="form-grid"><label>First date<input id="schedule-from" type="date"></label><label>Last date<input id="schedule-to" type="date"></label><label>Time zone<input id="schedule-zone" maxlength="64" required></label></div>
+        <div class="form-grid"><label>Start time<input id="schedule-start" type="time" required></label><label>End time<input id="schedule-end" type="time" required></label><label>Priority<input id="schedule-priority" type="number" min="0" max="100" required></label></div>
+        <p class="detail">Equal start and end times mean all-day playback. Higher priorities take precedence when time slots overlap.</p>
+        <fieldset class="day-picker" id="schedule-weekdays"><legend>Repeat on</legend></fieldset>
+        <label class="checkbox"><input id="schedule-enabled" type="checkbox" checked> Schedule enabled</label>
+        <h3>Playback order</h3><ol id="schedule-playlist" class="editor-playlist"></ol>
+        <div class="add-media"><label>Media from library<select id="schedule-media"></select></label><button id="schedule-add" type="button" class="secondary">Add to playlist</button></div>
+        <p id="schedule-error" class="message" role="status"></p>
+      </div>
+      <footer class="dialog-foot"><button type="button" id="delete-schedule" class="secondary" hidden>Delete schedule</button><button id="save-schedule" type="submit">Save and publish</button></footer>
+    </form>
+  </dialog>
+
+  <dialog id="preview">
+    <header class="dialog-head"><h2 id="preview-title">Media preview</h2><button type="button" id="close-preview" class="secondary">Close</button></header>
+    <div id="preview-content"></div>
+  </dialog>
+  <dialog id="text-dialog" aria-labelledby="text-title">
+    <form id="text-form">
+      <header class="dialog-head"><h2 id="text-title">New text content</h2><button type="button" id="close-text" class="secondary">Close</button></header>
+      <div class="dialog-body">
+        <label>Title<input id="content-title" maxlength="120" required></label>
+        <label>On-screen text<textarea id="content-text" maxlength="3000" rows="7" required></textarea></label>
+        <p id="text-message" class="message" role="status"></p>
+      </div>
+      <footer class="dialog-foot"><button type="submit" id="save-text">Save to library</button></footer>
+    </form>
+  </dialog>
+</body>
+</html>

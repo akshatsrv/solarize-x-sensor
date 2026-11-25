@@ -1,0 +1,24 @@
+{
+  "appId": "com.solarizex.smartselfcheck.console",
+  "productName": "Smart Self Check Console",
+  "artifactName": "SmartSelfCheckConsole-Setup-${version}-${arch}.${ext}",
+  "directories": {
+    "app": "admin-desktop",
+    "output": "dist/installer"
+  },
+  "electronVersion": "45.5.0",
+  "toolsets": { "nsis": "1.2.1" },
+  "win": {
+    "target": "nsis",
+    "executableName": "SmartSelfCheckConsole",
+    "icon": "admin-desktop/console.ico",
+    "signAndEditExecutable": false
+  },
+  "nsis": {
+    "oneClick": true,
+    "perMachine": false,
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true,
+    "runAfterFinish": true
+  }
+}

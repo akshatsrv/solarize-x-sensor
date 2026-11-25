@@ -1,0 +1,26 @@
+{
+  "name": "smart-self-check-kiosk",
+  "version": "0.4.2",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "server": "node server.js",
+    "kiosk": "node kiosk.js",
+    "test": "node --test",
+    "test:integration": "node scripts/smoke.mjs",
+    "setup:kiosk": "install-electron",
+    "console": "electron admin-desktop",
+    "package:console": "electron-packager admin-desktop SmartSelfCheckConsole --platform=win32 --arch=x64 --out=dist --asar --icon=admin-desktop/console.ico --win32metadata.CompanyName=SolarizeX --win32metadata.ProductName=\"Smart Self Check Console\" --electron-version=45.5.0",
+    "package:installer": "npm run package:console -- --overwrite && electron-builder --config admin-installer.json --prepackaged dist/SmartSelfCheckConsole-win32-x64 --win nsis --x64 --publish never"
+  },
+  "optionalDependencies": {
+    "electron": "45.5.0"
+  },
+  "devDependencies": {
+    "@electron/packager": "20.3.0",
+    "electron-builder": "26.18.0"
+  }
+}

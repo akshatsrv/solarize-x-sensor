@@ -1,0 +1,21 @@
+:root { color-scheme: light; font-family: "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif; color: #162135; background: #f4f6f9; }
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 400px; }
+main { padding: 30px 34px; }
+header { display: flex; gap: 14px; align-items: center; margin-bottom: 24px; }
+header img { width: 43px; height: 43px; }
+h1 { font-size: 24px; font-weight: 650; margin: 0; }
+header p { font-size: 13px; color: #55647a; margin: 3px 0 0; }
+form { padding: 20px; border: 1px solid #dce3ed; border-radius: 8px; background: #fff; }
+label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+input { width: 100%; height: 34px; border: 1px solid #bcc8da; border-radius: 4px; margin-bottom: 14px; padding: 6px 9px; font: inherit; font-size: 14px; color: inherit; background: #fff; }
+input:focus { outline: 2px solid #185ba3; outline-offset: -1px; }
+#message { font-size: 12px; margin: 0 0 9px; min-height: 1rem; color: #586479; }
+#message.error { color: #a52722; }
+.actions { display: flex; justify-content: space-between; align-items: center; gap: .5rem; }
+button { min-width: 101px; min-height: 33px; padding: 4px 12px; border: 1px solid #18579b; border-radius: 4px; background: #185ba3; color: #fff; font: inherit; font-size: 13px; font-weight: 600; }
+button:hover { background: #114b8a; }
+button:focus-visible { outline: 2px solid #172338; outline-offset: 2px; }
+button:disabled { opacity: .6; }
+.link-button { min-width: 0; border: 0; background: transparent; color: #185ba3; }
+.link-button:hover { background: #eaf0f7; }

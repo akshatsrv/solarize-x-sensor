@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Smart Self Check</title>
+  <link rel="stylesheet" href="/style.css">
+  <script type="module" src="/display.js"></script>
+</head>
+<body class="kiosk">
+  <main>
+    <section id="standby" class="display-panel"><h1>Waiting for kiosk to start</h1></section>
+    <section id="marketing" class="display-panel" hidden>
+      <div id="media"></div>
+      <div id="welcome" class="welcome"><h1>Welcome</h1><p>Step closer to check in.</p></div>
+    </section>
+    <section id="website" class="display-panel" hidden>
+      <div class="check-in">
+        <h1 id="website-status">Opening check-in…</h1>
+        <a id="website-link" class="button" rel="noopener noreferrer" target="_blank" hidden>Open website</a>
+      </div>
+    </section>
+    <section id="registration" class="display-panel" hidden>
+      <div class="check-in">
+        <p class="demo">Check-in demo</p>
+        <h1 id="check-in-title">Welcome</h1>
+        <p id="check-in-copy">Start your test registration.</p>
+        <button id="continue" type="button">Start check-in</button>
+        <p id="display-message" class="message" role="status"></p>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

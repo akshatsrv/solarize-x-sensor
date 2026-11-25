@@ -1,0 +1,12 @@
+:root { color-scheme: light; font-family: "Segoe UI", system-ui, sans-serif; color: #192438; background: #eaf0f7; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 2rem 1rem; }
+main { width: min(100%, 30rem); margin: auto; padding: 1.5rem; border: 1px solid #ccd8ea; border-radius: .5rem; background: white; }
+h1 { margin: 0; font-size: 1.5rem; }
+p { color: #536378; }
+label { display: grid; gap: .3rem; margin-bottom: .8rem; font-weight: 600; }
+input { width: 100%; padding: .4rem .55rem; border: 1px solid #bdcce0; border-radius: .3rem; font: inherit; }
+button { padding: .5rem .75rem; border: 0; border-radius: .3rem; background: #185ba3; color: white; font: inherit; font-weight: 600; }
+button:disabled { opacity: .6; }
+a { color: #185ba3; }
+#register-message.error { color: #9a2924; }
