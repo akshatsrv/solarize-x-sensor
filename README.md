@@ -5,16 +5,18 @@ A Windows kiosk system for visitor check-in and digital signage. Each kiosk loop
 | Component | Where it runs | How to set it up |
 | --- | --- | --- |
 | Management server | One central Windows machine | Run the Node.js server with SQLite storage. |
-| Desktop console | An operator's Windows x64 PC | Run the console Setup executable and connect to the management server. |
+| Desktop console | An operator's Windows x64 PC | Run Setup and choose a local system or an existing management server. |
 | Kiosk agent and display | Each Windows kiosk | Start the kiosk agent with its server address, credential, and sensor settings. |
 
 ## Windows desktop console
 
-1. Obtain `SmartSelfCheckConsole-Setup-0.4.2-x64.exe` from your deployment administrator or build it from this repository. Run it on Windows x64. Setup installs for the current user, creates Start menu and desktop shortcuts, and opens the console when installation finishes.
-2. In **Connect to server**, enter the running management server's HTTPS address. For a demo with the server and console on the same computer, enter `http://127.0.0.1:8080`. The installer bundles the desktop runtime.
-3. Enter your existing credentials. For a new account, choose **Activate invitation**, enter the user name and code from your superuser, and set a password. The console then signs in to the server.
+1. Run `SmartSelfCheckConsole-Setup-0.5.0-x64.exe` on Windows x64. Setup installs for the current user, creates Start menu and desktop shortcuts, and opens the application when installation finishes.
+2. Choose **Use this PC** to run the bundled server, SQLite database, console, and `local-kiosk` agent. Set a password of 12–128 characters for the local `owner` superuser. The application starts the local components and opens the console. The installer includes the runtime for every local component.
+3. Go to **Destinations → local-kiosk → Start** to open the test display. Use **Simulate arrival** and **Simulate departure** to test the change between signage and check-in.
 
-The console remembers the last server address and holds the sign-in password in memory for the current connection. To remove it, use **Settings → Apps → Installed apps** in Windows.
+For an existing management server, enter its HTTPS address in **Connect to server** and sign in. If you have a new account, select **Activate invitation** and use the username and code from your superuser to set a password.
+
+The console remembers the selected connection mode and holds the sign-in password in memory for that connection. The local system runs on loopback while the desktop app is open. When you reopen the app in local mode, it starts the server and kiosk again and asks for your password. The local SQLite data and kiosk cache are stored in your Windows user profile under `Smart Self Check Console/local-system`. To remove the app, use **Settings → Apps → Installed apps** in Windows.
 
 The three-line button at the top of the sidebar shows or hides navigation. The **Connection** menu changes or disconnects the server. The **View** menu opens Destinations, Designer, Scheduler, Setup, and the other console pages. The updated web console remains available from the same server address.
 
@@ -23,6 +25,8 @@ From the source directory, run `npm ci` and `npm run console` to launch the desk
 ## Superusers, registration, and passwords
 
 ### First sign-in
+
+On a single-PC installation, create the first superuser with **Use this PC**. The username is `owner`, and you choose its password. Use **System management → Permissions** to invite additional users. For a separately deployed management server, follow these steps:
 
 1. During server setup, generate a random bootstrap password and set `ADMIN_TOKEN` in `server.env`. For example, run `node -p "require('node:crypto').randomBytes(32).toString('base64url')"` on the server. Store the result in your organization's password manager and restrict `server.env` to the service account and administrators.
 2. Start the server and sign in to the desktop console as `admin` with the value of `ADMIN_TOKEN`. This bootstrap account is managed by the server owner.

@@ -176,9 +176,13 @@ function reconcile() {
     browserError = 'Kiosk desktop runtime missing. Run npm ci on this device.';
     return;
   }
-  child = spawn(executable, [desktop], {
+  const bundled = process.env.KIOSK_BUNDLED_DESKTOP === '1';
+  const env = { ...process.env, KIOSK_DISPLAY_URL: displayUrl, KIOSK_DISPLAY_SECRET: displaySecret, KIOSK_DISPLAY_DATA: dataDir };
+  delete env.ELECTRON_RUN_AS_NODE;
+  delete env.KIOSK_TOKEN;
+  child = spawn(executable, [bundled ? '--smart-kiosk-display' : desktop], {
     stdio: process.env.KIOSK_DEBUG_DESKTOP === '1' ? 'inherit' : 'ignore', windowsHide: true,
-    env: { ...process.env, KIOSK_DISPLAY_URL: displayUrl, KIOSK_DISPLAY_SECRET: displaySecret, KIOSK_DISPLAY_DATA: dataDir },
+    env,
   });
   child.once('error', error => { browserError = `Display launch failed: ${error.message}`; });
   const launched = child;
@@ -367,6 +371,7 @@ local.listen(port, '127.0.0.1', () => {
 });
 
 function shutdown() {
+  if (stopping) return;
   stopping = true;
   stopSensor?.();
   clearInterval(timer);
@@ -375,3 +380,4 @@ function shutdown() {
 }
 process.once('SIGINT', shutdown);
 process.once('SIGTERM', shutdown);
+if (process.env.SMART_LOCAL_MANAGED === '1') process.stdin.once('end', shutdown).resume();

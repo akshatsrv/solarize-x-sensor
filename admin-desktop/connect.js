@@ -7,6 +7,12 @@ const message = byId('message');
 const toggle = byId('toggle-register');
 const code = byId('invite-code');
 const confirmation = byId('secret-confirm');
+const localButton = byId('start-local');
+const localStatus = byId('local-status');
+const ownerForm = byId('local-owner-form');
+const ownerPassword = byId('owner-secret');
+const ownerConfirm = byId('owner-confirm');
+const ownerButton = byId('create-owner');
 let registering = false;
 
 function setRegistration(enabled) {
@@ -32,9 +38,79 @@ toggle.onclick = () => {
   byId('identity').focus();
 };
 
-window.consoleConnection.defaults().then(config => {
+function localNotice(text, failed = false) {
+  localStatus.hidden = !text;
+  localStatus.textContent = text;
+  localStatus.classList.toggle('error', failed);
+}
+
+async function startLocal() {
+  if (localButton.disabled || button.disabled || ownerButton.disabled) return;
+  localButton.disabled = button.disabled = true;
+  localNotice('Starting the local server and kiosk…');
+  try {
+    const result = await window.consoleConnection.local();
+    if (result.error) throw new Error(result.error);
+    setRegistration(false);
+    address.value = result.address;
+    byId('identity').value = 'owner';
+    password.value = '';
+    if (result.configured) {
+      ownerForm.hidden = true;
+      form.hidden = false;
+      localNotice('Local server and kiosk are ready. Sign in with your local password.');
+      password.focus();
+    } else {
+      ownerForm.reset();
+      ownerForm.hidden = false;
+      form.hidden = true;
+      localNotice('Set a password for the local owner account to open the console.');
+      ownerPassword.focus();
+    }
+  } catch (error) {
+    localNotice(error.message, true);
+  } finally {
+    localButton.disabled = button.disabled = false;
+  }
+}
+
+localButton.onclick = startLocal;
+byId('owner-back').onclick = () => {
+  if (ownerButton.disabled) return;
+  ownerForm.reset();
+  ownerForm.hidden = true;
+  form.hidden = false;
+  address.value = '';
+  byId('identity').value = '';
+  localNotice('');
+  address.focus();
+};
+ownerForm.onsubmit = async event => {
+  event.preventDefault();
+  if (ownerButton.disabled) return;
+  if (ownerPassword.value !== ownerConfirm.value) {
+    localNotice('The passwords do not match.', true);
+    return;
+  }
+  ownerButton.disabled = localButton.disabled = true;
+  try {
+    const result = await window.consoleConnection.activateLocalOwner(ownerPassword.value);
+    if (result.error) throw new Error(result.error);
+    ownerForm.reset();
+    ownerForm.hidden = true;
+    form.hidden = false;
+    localNotice('');
+  } catch (error) {
+    localNotice(error.message, true);
+  } finally {
+    ownerButton.disabled = localButton.disabled = false;
+  }
+};
+
+window.consoleConnection.defaults().then(async config => {
   if (config && !address.value) address.value = config.address;
-  password.focus();
+  if (config?.preferLocal) await startLocal();
+  else password.focus();
 });
 
 form.addEventListener('submit', async event => {

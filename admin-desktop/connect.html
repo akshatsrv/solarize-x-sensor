@@ -11,6 +11,19 @@
 <body>
   <main>
     <header><img src="./console.png" alt=""><div><h1 id="connection-title">Connect to server</h1><p>Smart Self Check Console</p></div></header>
+    <div class="local-offer">
+      <div><strong>Run on this PC</strong><p>Start the local server and a test kiosk from the console.</p></div>
+      <button id="start-local" type="button">Use this PC</button>
+    </div>
+    <p id="local-status" class="status" role="status" hidden></p>
+    <form id="local-owner-form" hidden>
+      <label for="owner-secret">Local owner password</label>
+      <input id="owner-secret" type="password" minlength="12" maxlength="128" autocomplete="new-password" required>
+      <label for="owner-confirm">Confirm password</label>
+      <input id="owner-confirm" type="password" minlength="12" maxlength="128" autocomplete="new-password" required>
+      <p class="status">You'll sign in as owner on this PC.</p>
+      <div class="actions"><button id="owner-back" class="link-button" type="button">Use another server</button><button id="create-owner" type="submit">Start console</button></div>
+    </form>
     <form id="connection-form">
       <label for="address">Server address</label>
       <input id="address" name="address" type="url" spellcheck="false" required placeholder="https://signage.example.com">

@@ -623,7 +623,10 @@ const checkpoints = setInterval(() => {
   checkpointTelemetry().catch(error => console.error(`Saving last-seen times: ${error.message}`));
 }, 30000).unref();
 
+let shuttingDown = false;
 function shutdown() {
+  if (shuttingDown) return;
+  shuttingDown = true;
   clearInterval(checkpoints);
   peers.stop();
   server.close(async () => {
@@ -640,3 +643,4 @@ function shutdown() {
 }
 process.once('SIGINT', shutdown);
 process.once('SIGTERM', shutdown);
+if (process.env.SMART_LOCAL_MANAGED === '1') process.stdin.once('end', shutdown).resume();

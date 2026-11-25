@@ -1,5 +1,6 @@
 :root { color-scheme: light; font-family: "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif; color: #162135; background: #f4f6f9; }
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 body { margin: 0; min-width: 400px; }
 main { padding: 30px 34px; }
 header { display: flex; gap: 14px; align-items: center; margin-bottom: 24px; }
@@ -19,3 +20,8 @@ button:focus-visible { outline: 2px solid #172338; outline-offset: 2px; }
 button:disabled { opacity: .6; }
 .link-button { min-width: 0; border: 0; background: transparent; color: #185ba3; }
 .link-button:hover { background: #eaf0f7; }
+.local-offer { display: flex; gap: .7rem; align-items: center; justify-content: space-between; padding: .7rem .85rem; margin-bottom: .8rem; border: 1px solid #cbd8e9; border-radius: .45rem; background: #eaf1fb; font-size: 13px; }
+.local-offer p, .status { margin: .25rem 0; color: #55647a; font-size: 12px; }
+.status.error { color: #a52722; }
+#local-status { margin: 0 0 .65rem; }
+#local-owner-form .actions { margin-top: .9rem; }
