@@ -2,6 +2,8 @@
 
 A Windows kiosk system for visitor check-in and digital signage. Each kiosk loops its assigned slides, images, videos, and text, opens the configured site when a visitor approaches, and returns to signage after the visitor leaves. The default website is https://solarizedigitech.com/.
 
+[Download the Windows x64 installer](https://github.com/akshatsrv/solarize-x-sensor/releases/download/v0.5.0/SmartSelfCheckConsole-Setup-0.5.0-x64.exe) · [GitHub release notes](https://github.com/akshatsrv/solarize-x-sensor/releases/tag/v0.5.0)
+
 | Component | Where it runs | How to set it up |
 | --- | --- | --- |
 | Management server | One central Windows machine | Run the Node.js server with SQLite storage. |
@@ -56,8 +58,6 @@ A superuser can invite any number of named accounts with the following roles. Th
 3. Select **Schedule presentation**, choose your test kiosk as the target, and publish. The editor opens on today's date with the presentation already in the playlist. For a one-off showcase, use all-day hours and a priority above other overlapping demo schedules.
 4. Open **Destinations** and start the display. Check the scheduled slide name, playback state, and sensor status. Use **Simulate arrival** and **Simulate departure** on a simulator kiosk to demonstrate the website handoff. On Windows with a USB PIR serial device, validate the actual trigger and return in person.
 5. Open **Playback history**, select the kiosk, and verify a slide start and a proximity-triggered check-in. Export the visible results to CSV if needed. A disconnected kiosk buffers up to 500 recent events locally for upload on reconnect. The server keeps the newest 20,000 records and the console shows up to 150 for the chosen filter.
-
-The POC follows the content, scheduling, viewer, and administration workflow described in the [PADS4 introduction](https://docs.pads4.com/getting-started/Introduction). The [system](https://docs.pads4.com/system-requirements), [network](https://docs.pads4.com/network-requirements), [hardware](https://docs.pads4.com/system-configuration/PADS4-Hardware-Configuration-Guide), and [server connection](https://docs.pads4.com/digital-signage/windows-applications/system-management/starting-pads4-system-management/connecting-to-your-pads4-server) guides informed the checklist. Their capacity and port figures apply to PADS4 installations.
 
 ## Windows deployment
 
@@ -224,5 +224,3 @@ Send `present = $false` to report departure. The endpoint binds to loopback and 
 - `npm run test:integration` starts a server and two kiosk agents on temporary loopback ports. It covers targeted and offline playback, check-in routing, sensor input, kiosk enrollment, permissions, single-use registration, password changes, and password recovery.
 - For a Windows desktop smoke test set `KIOSK_WINDOWED=1`, start a kiosk, assign an image and a video, and verify both appear in order. Simulate arrival and departure to check the actual website opens and the screen returns. Remove `KIOSK_WINDOWED` for the full-screen installation.
 - For an API or browser-only test, start the agent with `--manual-display` and open the local URL it prints. The external website is presented as a link in this mode. The desktop application opens it automatically.
-
-The media library and ordered playlists draw on the [PADS4 Designer reference](https://docs.pads4.com/digital-signage/windows-applications/designer/introduction).
