@@ -2,7 +2,7 @@
 
 A Windows kiosk system for visitor check-in and digital signage. Each kiosk loops its assigned slides, images, videos, and text, opens the configured site when a visitor approaches, and returns to signage after the visitor leaves. The default website is https://solarizedigitech.com/.
 
-[Download the Windows x64 installer](https://github.com/akshatsrv/solarize-x-sensor/releases/download/v0.5.0/SmartSelfCheckConsole-Setup-0.5.0-x64.exe) · [GitHub release notes](https://github.com/akshatsrv/solarize-x-sensor/releases/tag/v0.5.0)
+[Download the Windows x64 installer](https://github.com/akshatsrv/solarize-x-sensor/releases/download/v0.5.1/SmartSelfCheckConsole-Setup-0.5.1-x64.exe) · [GitHub release notes](https://github.com/akshatsrv/solarize-x-sensor/releases/tag/v0.5.1)
 
 | Component | Where it runs | How to set it up |
 | --- | --- | --- |
@@ -12,9 +12,9 @@ A Windows kiosk system for visitor check-in and digital signage. Each kiosk loop
 
 ## Windows desktop console
 
-1. Run `SmartSelfCheckConsole-Setup-0.5.0-x64.exe` on Windows x64. Setup installs for the current user, creates Start menu and desktop shortcuts, and opens the application when installation finishes.
+1. Run `SmartSelfCheckConsole-Setup-0.5.1-x64.exe` on Windows x64. Setup installs for the current user, creates Start menu and desktop shortcuts, and opens the application when installation finishes.
 2. Choose **Use this PC** to run the bundled server, SQLite database, console, and `local-kiosk` agent. Set a password of 12–128 characters for the local `owner` superuser. The application starts the local components and opens the console. The installer includes the runtime for every local component.
-3. Go to **Destinations → local-kiosk → Start** to open the test display. Use **Simulate arrival** and **Simulate departure** to test the change between signage and check-in.
+3. Go to **Destinations → local-kiosk → Start** to open the separate **Smart Self Check Kiosk** window. Use **Simulate arrival** and **Simulate departure** to test the change between signage and check-in.
 
 For an existing management server, enter its HTTPS address in **Connect to server** and sign in. If you have a new account, select **Activate invitation** and use the username and code from your superuser to set a password.
 
@@ -62,6 +62,14 @@ A superuser can invite any number of named accounts with the following roles. Th
 ## Windows deployment
 
 Install Node.js 24 LTS on the server and each kiosk. Copy this directory to a stable location on each machine, such as `C:\SmartSelfCheck`.
+
+### Two-laptop LAN test
+
+1. Put both laptops on the same trusted network. On laptop A, use the **Central server** setup below with `SERVER_HOST=0.0.0.0`. Allow inbound TCP 8080 on the Windows private network, limited to the local subnet. Run `ipconfig` and find laptop A's IPv4 address.
+2. On laptop B, open `http://<laptop-A-IP>:8080/healthz` in a browser to verify it can reach the server. Follow **Each kiosk** below with laptop A's URL, a distinct kiosk ID such as `laptop-b`, the matching `KIOSK_TOKEN`, and `KIOSK_WINDOWED=1`. Keep the kiosk agent running.
+3. On laptop A, open `http://127.0.0.1:8080` in a browser and sign in as `admin` with `ADMIN_TOKEN`. Upload and assign a playlist, then open **Destinations**, wait for `laptop-b` to come online, and click **Start**. The kiosk window opens on laptop B. Use **Simulate arrival** and **Simulate departure** on laptop A to test the website and signage on laptop B.
+
+The installer's **Use this PC** mode runs a self-contained demo on one machine. Use the source-based server and agent for the two-laptop test.
 
 ### Central server
 

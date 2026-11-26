@@ -8,6 +8,8 @@ if (!base || !secret) throw new Error('Launch the kiosk with node kiosk.js.');
 const profile = join(process.env.KIOSK_DISPLAY_DATA, 'desktop');
 mkdirSync(profile, { recursive: true });
 app.setPath('userData', profile);
+app.setName('Smart Self Check Kiosk');
+if (process.platform === 'win32') app.setAppUserModelId('com.solarizex.smartselfcheck.kiosk');
 
 const preferences = { contextIsolation: true, sandbox: true, nodeIntegration: false, devTools: false };
 let window;
@@ -128,7 +130,8 @@ function updateMonitor(monitor, session) {
 async function poll() {
   if (window.isDestroyed()) return;
   try {
-    const response = await fetch(base + '/api/display', { signal: AbortSignal.timeout(1500) });
+    const headers = window.isVisible() ? { Authorization: 'Bearer ' + secret } : {};
+    const response = await fetch(base + '/api/display', { headers, signal: AbortSignal.timeout(1500) });
     if (!response.ok) throw new Error('Display unavailable');
     const { session, monitor } = await response.json();
     if (window.isDestroyed()) return;
@@ -147,7 +150,7 @@ async function poll() {
 app.whenReady().then(() => {
   Menu.setApplicationMenu(null);
   window = new BaseWindow({
-    width: 1100, height: 700, show: false, kiosk: !windowed,
+    title: 'Smart Self Check Kiosk', width: 1100, height: 700, show: false, kiosk: !windowed,
     backgroundColor: '#0a2727',
   });
   player = new WebContentsView({ webPreferences: { ...preferences, backgroundThrottling: false } });
@@ -163,7 +166,8 @@ app.whenReady().then(() => {
     if (!contents.isDestroyed()) contents.close();
     app.quit();
   });
-  contents.once('dom-ready', () => { if (!window.isDestroyed()) window.show(); });
+  window.show();
+  if (windowed) window.moveTop();
   void contents.loadURL(base).catch(error => {
     console.error(`Could not open the kiosk player: ${error.message}`);
     app.exit(1);

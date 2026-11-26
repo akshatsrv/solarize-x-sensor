@@ -283,7 +283,7 @@ async function handle(req, res) {
     if (path === '/presentation-view.js') return asset(res, 'presentation-view.js', 'text/javascript');
     if (path === '/style.css') return asset(res, 'style.css', 'text/css');
     if (path === '/api/display') {
-      if (displayRunning) {
+      if (displayRunning && (manual || matches(req.headers.authorization, `Bearer ${displaySecret}`))) {
         lastDisplay = Date.now();
         browserError = undefined;
       }
